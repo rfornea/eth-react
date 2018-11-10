@@ -8,11 +8,15 @@
  */
 import React, { Component } from 'react'
 import HelloWorldContract from '../build/contracts/HelloWorld.json'
+import OysterPearl from '../build/contracts/OysterPearl.json'
 import getWeb3 from './utils/getWeb3'
 import helloWorldBytecode from './utils/helloWorld'  // eslint-disable-line
+import oysterPearlByteCode from './utils/oysterPearl'
 // ^^ Import our components.
+import AmendClaim from './components/AmendClaim'
 import ContractInput from './components/ContractInput'
 import Modal from './components/Modal'
+import contract from 'truffle-contract'
 
 // ^^ Import our fonts and CSS.
 import './css/roboto.css'
@@ -22,8 +26,9 @@ import './App.css'
 
 class App extends Component {
   constructor(props) {
-    super(props)
-    this.updateHello = this.updateHello.bind(this);
+    super(props);
+    this.updateClaimAmount = this.updateClaimAmount.bind(this);
+    // this.updateHello = this.updateHello.bind(this);
     this.initModal = this.initModal.bind(this);
 
     // ^^ Change initial states and add new ones here.
@@ -31,8 +36,12 @@ class App extends Component {
       hello: "I'm waiting to say hello...",
       contractAddress: "Waiting on contract address...",
       modal: 0,
+      claimAmountSet: 50,
+      payAmountSet: 40,
+      feeAmountSet: 10,
+      accuracy: 0,
       instance: null,
-      web3: null
+      web3: null,
     }
   }
 
@@ -40,17 +49,18 @@ class App extends Component {
     // Get network provider and web3 instance.
     // See utils/getWeb3 for more info.
     getWeb3
-    .then(results => {
-      this.setState({
-        web3: results.web3
-      })
+      .then(results => {
+        this.setState({
+          web3: results.web3
+        });
 
-      // Instantiate contract once web3 provided.
-      this.instantiateContract()
-    })
-    .catch(() => {
-      console.log('Error finding web3.')
-    })
+        // Instantiate contract once web3 provided.
+        this.instantiateContract();
+        
+      })
+      .catch(() => {
+        console.log('Error finding web3.')
+      })
   }
 
   instantiateContract() {
@@ -61,14 +71,15 @@ class App extends Component {
      * state management library, but for convenience I've placed them here.
      */
 
-    const contract = require('truffle-contract')
-    const helloWorld = contract(HelloWorldContract)
-    let helloWorldInstance
-    helloWorld.setProvider(this.state.web3.currentProvider)
+    //const contract = require('truffle-contract')
+    const oysterPearl = contract(OysterPearl)
+    let oysterPearlInstance;
+    oysterPearl.setProvider(this.state.web3.currentProvider);
 
-    helloWorld.deployed().then((instance) => {
-      helloWorldInstance = instance
-      this.setState({ instance: helloWorldInstance })
+    oysterPearl.deployed().then((instance) => {
+      oysterPearlInstance = instance;
+      this.setState({ instance: oysterPearlInstance });
+      
 
       /* ^^ Uncomment the line below see all the cool things
        * in our first contract!
@@ -81,16 +92,36 @@ class App extends Component {
       //helloWorldBytecode(helloWorldInstance, this.state.web3);
 
       // ^^ Display the address of our smart contract.
-      this.setState({ contractAddress: helloWorldInstance.address })
+      this.setState({ contractAddress: oysterPearlInstance.address });
 
       /* ^^ Display our default Hello World message from HelloWorld.sol
        * Once you change the default message, you will need to truffle migrate --reset
        * to see the original message again.
        */
-      return helloWorldInstance.getHello()
+      return {
+        claimAmountSet: oysterPearlInstance.claimAmount,
+        payAmountSet: oysterPearlInstance.payAmount,
+        feeAmountSet: oysterPearlInstance.feeAmount,
+        accuracy: 0,
+      }
 
     }).then((result) => {
-      return this.setState({ hello: result })
+      return this.setState(
+        {
+          claimAmountSet: result.claimAmountSet,
+          payAmountSet: result.payAmountSet,
+          feeAmountSet: result.feeAmountSet,
+          accuracy: result.accuracy,
+        })
+    })
+  }
+
+  updateClaimAmount(claimAmountSet, payAmountSet, feeAmountSet, accuracy) {
+    this.setState({
+      claimAmountSet: claimAmountSet,
+      payAmountSet: payAmountSet,
+      feeAmountSet: feeAmountSet,
+      accuracy: accuracy,
     })
   }
 
@@ -121,8 +152,11 @@ class App extends Component {
             <p>If your contracts compiled and migrated successfully, we'll show your contract address and the hello message below.</p>
             <div>Your contract address is: <span className="contract-address">{this.state.contractAddress}</span></div>
           </div>
-          <p className="message">The hello message from your contract is: <strong className="hello-world">{this.state.hello}</strong></p>
-          <ContractInput state={this.state} updateHello={this.updateHello} initModal={this.initModal} />
+          <p className="message">The claim amount from your contract is: <strong className="hello-world">{this.state.claimAmountSet}</strong></p>
+          <p className="message">The pay amount from your contract is: <strong className="hello-world">{this.state.payAmountSet}</strong></p>
+          <p className="message">The fee amount from your contract is: <strong className="hello-world">{this.state.feeAmountSet}</strong></p>
+          <p className="message">The accuracy from your contract is: <strong className="hello-world">{this.state.accuracy}</strong></p>
+          <AmendClaim state={this.state} updateClaimAmount={this.updateClaimAmount} initModal={this.initModal} />
         </main>
         <Modal modal={this.state.modal} />
       </div>

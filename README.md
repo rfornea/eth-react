@@ -26,6 +26,8 @@
 5. `truffle migrate`
 6. `npm run start`
 
+Note:  If you add your own smart contract and deploying it isn't working, try `truggle migrate --reset`
+
 ### Testing
 Type `truffle test` to test.
 
