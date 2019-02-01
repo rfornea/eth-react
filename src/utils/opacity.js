@@ -1,4 +1,4 @@
-const oysterPearlBytecode = (instance, web3) => {
+const opacityBytecode = (instance, web3) => {
   web3.eth.getCode(instance.address, function(error, result) {
     if(!error) {
       console.log(JSON.stringify(result));
@@ -6,4 +6,4 @@ const oysterPearlBytecode = (instance, web3) => {
   })
 }
 
-export default oysterPearlBytecode
+export default opacityBytecode

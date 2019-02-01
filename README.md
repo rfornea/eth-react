@@ -8,6 +8,12 @@
   2. Import a new account and use the private key provided by Ganache from account 1.
 * Install the [Truffle Framework](http://truffleframework.com/)
   * `npm install -g truffle`
+  * you may need to install a specific version of truffle if you run into issues with solidity compiler versions
+  not matching what your contract needs
+  * `npm view truffle versions` will show you all the versions of truffle
+  * `npm install -g truffle@(specify version)` to get a certain version
+  * `truffle version` will tell you what version of the solidity compiler this truffle version is using
+  * try new truffle versions until you get the right solidity compiler
 * Clone or download the repo
 * Type `npm install`
   * If you get an error on install, don't panic. It should still work.
@@ -23,10 +29,9 @@
 2. Unlock MetaMask with local RPC network.
 3. Switch accounts to the one we imported.
 4. `truffle compile`
-5. `truffle migrate`
+5. `truffle migrate` or `truffle migrate --reset` if you get errors such as `Error: Attempting to run transaction 
+which calls a contract function, but recipient address (whatever the address is) is not a contract address`
 6. `npm run start`
-
-Note:  If you add your own smart contract and deploying it isn't working, try `truggle migrate --reset`
 
 ### Testing
 Type `truffle test` to test.

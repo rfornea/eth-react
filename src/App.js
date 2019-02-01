@@ -8,10 +8,10 @@
  */
 import React, { Component } from 'react'
 import HelloWorldContract from '../build/contracts/HelloWorld.json'
-import OysterPearl from '../build/contracts/OysterPearl.json'
+import Opacity from '../build/contracts/Opacity.json'
 import getWeb3 from './utils/getWeb3'
 import helloWorldBytecode from './utils/helloWorld'  // eslint-disable-line
-import oysterPearlByteCode from './utils/oysterPearl'
+import opacityByteCode from './utils/opacity'
 // ^^ Import our components.
 import AmendClaim from './components/AmendClaim'
 import ContractInput from './components/ContractInput'
@@ -72,13 +72,13 @@ class App extends Component {
      */
 
     //const contract = require('truffle-contract')
-    const oysterPearl = contract(OysterPearl)
-    let oysterPearlInstance;
-    oysterPearl.setProvider(this.state.web3.currentProvider);
+    const opacity = contract(Opacity)
+    let opacityInstance;
+    opacity.setProvider(this.state.web3.currentProvider);
 
-    oysterPearl.deployed().then((instance) => {
-      oysterPearlInstance = instance;
-      this.setState({ instance: oysterPearlInstance });
+    opacity.deployed().then((instance) => {
+      opacityInstance = instance;
+      this.setState({ instance: opacityInstance });
       
 
       /* ^^ Uncomment the line below see all the cool things
@@ -92,16 +92,16 @@ class App extends Component {
       //helloWorldBytecode(helloWorldInstance, this.state.web3);
 
       // ^^ Display the address of our smart contract.
-      this.setState({ contractAddress: oysterPearlInstance.address });
+      this.setState({ contractAddress: opacityInstance.address });
 
       /* ^^ Display our default Hello World message from HelloWorld.sol
        * Once you change the default message, you will need to truffle migrate --reset
        * to see the original message again.
        */
       return {
-        claimAmountSet: oysterPearlInstance.claimAmount,
-        payAmountSet: oysterPearlInstance.payAmount,
-        feeAmountSet: oysterPearlInstance.feeAmount,
+        claimAmountSet: opacityInstance.claimAmount,
+        payAmountSet: opacityInstance.payAmount,
+        feeAmountSet: opacityInstance.feeAmount,
         accuracy: 0,
       }
 

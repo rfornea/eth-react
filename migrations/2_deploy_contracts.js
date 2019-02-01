@@ -1,7 +1,7 @@
 var HelloWorld = artifacts.require("./HelloWorld.sol");
-var OysterPearl = artifacts.require("./OysterPearl.sol");
+var Opacity = artifacts.require("./Opacity.sol");
 
 module.exports = function(deployer) {
   deployer.deploy(HelloWorld);
-  deployer.deploy(OysterPearl);
+  deployer.deploy(Opacity);
 };
